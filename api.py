@@ -36,8 +36,14 @@ def home():
 
 
 @app.route('/names')
-def names():
-    return #list of sample names
+def sample_names():
+    columns = inspector.get_columns('samples')
+    names = []
+    for column in columns:
+        names.append(column['name'])
+    del names[0]
+    
+    return jsonify(names)
 
 @app.route('/otu')
 def otu():
