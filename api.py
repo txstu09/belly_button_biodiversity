@@ -3,7 +3,7 @@
 #----------------------------
 import pandas as pd
 
-from flask import Flask
+from flask import Flask, jsonify
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
@@ -46,8 +46,16 @@ def sample_names():
     return jsonify(names)
 
 @app.route('/otu')
-def otu():
-    return #list of OTU descriptions
+def otu_descriptions():
+    results = session.query(otu.otu_id, otu.lowest_taxonomic_unit_found).all()
+    df = pd.DataFrame(results)
+
+    otu_count = len(df.index)
+    otu_info = []
+    for x in range(otu_count):
+        otu_info.append({df['otu_id'][x]: df['lowest_taxonomic_unit_found'][x]})
+        
+    return jsonify(otu_info)
 
 @app.route('/metadata/<sample>')
 def metadata():
