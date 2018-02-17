@@ -73,8 +73,11 @@ def sample_metadata(sample):
     return jsonify(metadata)
 
 @app.route('/wfreq/<sample>')
-def wfreq():
-    return #weekly washing freq. as a number
+def washing_frequency(sample):
+    sample_id = sample.replace('BB_','')
+    result = session.query(samples_meta).filter(samples_meta.SAMPLEID == sample_id).first()
+    
+    return result.WFREQ
 
 @app.route('/samples/<sample>')
 def samples():
