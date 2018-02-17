@@ -35,7 +35,7 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/names')
+@app.route('/names/')
 def sample_names():
     columns = inspector.get_columns('samples')
     names = []
@@ -45,7 +45,7 @@ def sample_names():
     
     return jsonify(names)
 
-@app.route('/otu')
+@app.route('/otu/')
 def otu_descriptions():
     results = session.query(otu.otu_id, otu.lowest_taxonomic_unit_found).all()
     df = pd.DataFrame(results)
@@ -57,7 +57,7 @@ def otu_descriptions():
         
     return jsonify(otu_info)
 
-@app.route('/metadata/<sample>')
+@app.route('/metadata/<sample>/')
 def sample_metadata(sample):
     sample_id = sample.replace('BB_','')
     result = session.query(samples_meta).filter(samples_meta.SAMPLEID == sample_id).first()
@@ -72,14 +72,14 @@ def sample_metadata(sample):
     
     return jsonify(metadata)
 
-@app.route('/wfreq/<sample>')
+@app.route('/wfreq/<sample>/')
 def washing_frequency(sample):
     sample_id = sample.replace('BB_','')
     result = session.query(samples_meta).filter(samples_meta.SAMPLEID == sample_id).first()
     
     return jsonify(result.WFREQ)
 
-@app.route('/samples/<sample>')
+@app.route('/samples/<sample>/')
 def sample_count(sample):
     results = session.query(samples.otu_id, getattr(samples, sample)).all()
     df = pd.DataFrame(results)
