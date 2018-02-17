@@ -58,8 +58,19 @@ def otu_descriptions():
     return jsonify(otu_info)
 
 @app.route('/metadata/<sample>')
-def metadata():
-    return #metadata for given sample
+def sample_metadata(sample):
+    sample_id = sample.replace('BB_','')
+    result = session.query(samples_meta).filter(samples_meta.SAMPLEID == sample_id).first()
+    metadata = {
+        'AGE':result.AGE,
+        'BBTYPE':result.BBTYPE,
+        'ETHNICITY':result.ETHNICITY,
+        'GENDER':result.GENDER,
+        'LOCATION':result.LOCATION,
+        'SAMPLEID':result.SAMPLEID
+    }
+    
+    return jsonify(metadata)
 
 @app.route('/wfreq/<sample>')
 def wfreq():
