@@ -3,7 +3,7 @@
 #----------------------------
 import pandas as pd
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
@@ -32,7 +32,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return #dashboard homepage
+    return render_template('index.html')
 
 
 @app.route('/names')
