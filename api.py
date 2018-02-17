@@ -1,5 +1,33 @@
+#----------------------------
+# IMPORTS
+#----------------------------
+import pandas as pd
+
 from flask import Flask
 
+import sqlalchemy
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, inspect
+
+#----------------------------
+# SQLALCHEMY SETUP
+#----------------------------
+engine = create_engine("sqlite:///datasets/belly_button_biodiversity.sqlite")
+
+Base = automap_base()
+Base.prepare(engine, reflect=True)
+
+otu = Base.classes.otu
+samples = Base.classes.samples
+samples_meta = Base.classes.samples_metadata
+
+session = Session(engine)
+inspector = inspect(engine)
+
+#----------------------------
+# BUILD FLASK ROUTES
+#----------------------------
 app = Flask(__name__)
 
 @app.route('/')
