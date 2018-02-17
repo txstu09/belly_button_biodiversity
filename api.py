@@ -80,8 +80,15 @@ def washing_frequency(sample):
     return result.WFREQ
 
 @app.route('/samples/<sample>')
-def samples():
-    return #OTU IDs & sample values for given sample
+def sample_count(sample):
+    results = session.query(samples.otu_id, getattr(samples, sample)).all()
+    df = pd.DataFrame(results)
+    df = df.set_index('otu_id').sort_values(by=[sample], ascending=False).head(10).reset_index()
+    ids = tuple(df['otu_id'].values.tolist())
+    vals = tuple(df[sample].values.tolist())
+    sample_counts = {'otu_ids':ids,'sample_values':vals}
+    
+    return jsonify(sample_counts)
 
 if __name__ == '__main__':
     app.run()
