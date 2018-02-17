@@ -51,9 +51,9 @@ def otu_descriptions():
     df = pd.DataFrame(results)
 
     otu_count = len(df.index)
-    otu_info = []
+    otu_info = {}
     for x in range(otu_count):
-        otu_info.append({df['otu_id'][x]: df['lowest_taxonomic_unit_found'][x]})
+        otu_info[str(df['otu_id'][x])] = df['lowest_taxonomic_unit_found'][x]
         
     return jsonify(otu_info)
 
@@ -77,7 +77,7 @@ def washing_frequency(sample):
     sample_id = sample.replace('BB_','')
     result = session.query(samples_meta).filter(samples_meta.SAMPLEID == sample_id).first()
     
-    return result.WFREQ
+    return jsonify(result.WFREQ)
 
 @app.route('/samples/<sample>')
 def sample_count(sample):
@@ -91,4 +91,4 @@ def sample_count(sample):
     return jsonify(sample_counts)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
