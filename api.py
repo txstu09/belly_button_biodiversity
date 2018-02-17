@@ -91,4 +91,5 @@ def sample_count(sample):
     return jsonify(sample_counts)
 
 if __name__ == '__main__':
-    app.run()
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.run(debug=True)
