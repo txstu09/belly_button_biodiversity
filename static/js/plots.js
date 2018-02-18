@@ -2,6 +2,8 @@ function selectSample() {
     var route = "/names";
 
     d3.json(route, function(error, response) {
+        if (error) return console.warn(error);
+
         var data = response;
 
         var dropdown = d3.select("#dropdown");
@@ -22,6 +24,8 @@ function metadataPanel(sample) {
     var route = "/metadata/"+ sample;
 
     d3.json(route, function(error, response) {
+        if (error) return console.warn(error);
+
         var data = response;
         var panel = d3.select("#infopanel");
 
@@ -38,5 +42,34 @@ function optionChanged(sample) {
     
 }
 
+function piePlot(sample) {
+    var sample_route = "/samples/" + sample;
+    var otu_route = "/otu";
+
+    Plotly.d3.json(sample_route, function(error, response) {
+        if (error) return console.warn(error);
+
+        var vals = response.sample_values;
+        var ids = response.otu_ids;
+
+        var data = [{
+            values: vals,
+            labels: ids,
+            type: "pie"
+        }];
+
+        var layout = {
+            title: "Top 10 Most Common Bacteria",
+            height: 400,
+            width: 500
+        };
+
+        var PIE = document.getElementById("pie");
+        Plotly.newPlot(PIE, data, layout);
+
+    })
+}
+
 selectSample();
 metadataPanel("BB_940");
+piePlot("BB_940");
