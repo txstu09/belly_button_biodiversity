@@ -3,3 +3,4 @@ Flask==0.12.2
 Flask-Cors==3.0.3
 Flask-SQLAlchemy==2.3.2
 SQLAlchemy==1.1.15
+gunicorn==19.7.1
