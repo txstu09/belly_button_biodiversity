@@ -1,3 +1,5 @@
+selectSample();
+
 function selectSample() {
     var route = "/names";
 
@@ -10,7 +12,7 @@ function selectSample() {
         dropdown
             .append("select")
             .attr("id", "selDataset")
-            .on("change", optionChanged(this.value))
+            .on("change", optionChanged)
             .selectAll("option")
             .data(data)
             .enter()
@@ -20,7 +22,18 @@ function selectSample() {
     });
 }
 
+function optionChanged() {
+    let value = document.getElementById(this.id).value;
+
+    metadataPanel(value);
+    piePlot(value);
+    bubblePlot(value);
+}
+
 function metadataPanel(sample) {
+    let element = document.getElementById("infopanel");
+    element.innerHTML = "";
+
     var route = "/metadata/"+ sample;
 
     d3.json(route, function(error, response) {
@@ -38,11 +51,10 @@ function metadataPanel(sample) {
     });
 }
 
-function optionChanged(sample) {
-    
-}
-
 function piePlot(sample) {
+    let element = document.getElementById("pie");
+    element.innerHTML = "";
+
     var route = "/samples/" + sample;
 
     Plotly.d3.json(route, function(error, response) {
@@ -70,12 +82,16 @@ function piePlot(sample) {
 }
 
 function bubblePlot(sample) {
+    let element = document.getElementById("bubble");
+    element.innerHTML = "";
+
     var route = "/samples/" + sample;
 
     Plotly.d3.json(route, function(error, response) {
         if (error) return console.warn(error);
 
         var vals = response.sample_values;
+        var val_size = vals.map(x => x+10);
         var ids = response.otu_ids;
 
         var trace1 = {
@@ -83,7 +99,7 @@ function bubblePlot(sample) {
             y: vals,
             mode: "markers",
             marker: {
-                size: vals,
+                size: val_size,
                 color: ids,
                 colorscale: "Portland"
             }
@@ -100,8 +116,3 @@ function bubblePlot(sample) {
         Plotly.newPlot(BUBBLE, data, layout);
     })
 }
-
-selectSample();
-metadataPanel("BB_940");
-piePlot("BB_940");
-bubblePlot("BB_940");
