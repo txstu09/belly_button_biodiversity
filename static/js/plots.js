@@ -43,10 +43,9 @@ function optionChanged(sample) {
 }
 
 function piePlot(sample) {
-    var sample_route = "/samples/" + sample;
-    var otu_route = "/otu";
+    var route = "/samples/" + sample;
 
-    Plotly.d3.json(sample_route, function(error, response) {
+    Plotly.d3.json(route, function(error, response) {
         if (error) return console.warn(error);
 
         var vals = response.sample_values;
@@ -60,8 +59,8 @@ function piePlot(sample) {
 
         var layout = {
             title: "Top 10 Most Common Bacteria",
-            height: 400,
-            width: 500
+            height: 600,
+            width: 800
         };
 
         var PIE = document.getElementById("pie");
@@ -70,6 +69,39 @@ function piePlot(sample) {
     })
 }
 
+function bubblePlot(sample) {
+    var route = "/samples/" + sample;
+
+    Plotly.d3.json(route, function(error, response) {
+        if (error) return console.warn(error);
+
+        var vals = response.sample_values;
+        var ids = response.otu_ids;
+
+        var trace1 = {
+            x: ids,
+            y: vals,
+            mode: "markers",
+            marker: {
+                size: vals,
+                color: ids,
+                colorscale: "Portland"
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            title: "Top 10 Bacteria",
+            showlegend: false
+        };
+
+        var BUBBLE = document.getElementById("bubble");
+        Plotly.newPlot(BUBBLE, data, layout);
+    })
+}
+
 selectSample();
 metadataPanel("BB_940");
 piePlot("BB_940");
+bubblePlot("BB_940");
